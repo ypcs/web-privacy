@@ -12,6 +12,9 @@ sitemap: true
 published: true
 ---
 
+Note: Following is work-in-progress, and just quickly drafted from my mind
+related to discussion at <https://mastodontti.fi/@vrntnn/109290555339487403>.
+
 Since dawn of GDPR (25th May 2018) most sites have been nagging user and asking
 them to select how their data should be handled.  
 
@@ -24,7 +27,20 @@ policies and eg. cookies the specific site uses. Then user could just define
 their preferences via browser settings (which can be then synced to all of
 their devices).
 
+
 ## `/.well-known/privacy-policy.json`
+
+This would be the site-specific privacy policy, where site describes how it
+tracks it's users. Current example includes just cookies, but this could easily
+be extended to support eg. browser localStorage, or eg. to describe some GDPR
+data processing policies, like "here is our human-readable privacy policy".
+
+There might already exist some formats describing eg. cookie usage in
+machine-readable format, and such formats might be preferable to inveting yet
+another new standard. Large part of this whole idea is to force browsers to by
+default deny all tracking, and require sites to describe all data they collect
+before allowing anything.
+
 ```json
 {
   "meta": {
@@ -73,4 +89,41 @@ to use cookies outside the policy.
 If browser would openly report your preferences to any server you access, that
 could make it possible to identify users based on your privacy preferences. Eg.
 malicious site could list tens or hundreds of different cookies, to try
-fingerprint your decisions
+fingerprint your decisions.
+
+So, it might be necessary to nag user, show some information about the cookies
+site is using, and ask if we should use user's global default preferences. When
+encountering a new item, eg. new site with new cookie, user would be asked if
+that cookie should be allowed.
+
+Ideally user selections would consist of following data:
+
+1. site that sets the tracker, `example.net`
+2. type of the tracker (eg. cookie)
+3. decision (allow|deny)
+
+so the question, *asked by the browser*, based on the site privacy policy,
+could be something like
+
+> This site uses following tracking methods:
+>
+>  - Functional cookie `mycookie`, described as "the description provided by
+>    site owner, trying to justify why this should be accepted"
+>  - Google Analytics (your policy: allow)
+>
+>  Allow / Customize / Deny
+
+Browser would then store this information. Later, when user visits same site on
+eg. different device, but with synced browser settings, browser could just
+allow or deny based on the previous selections.
+
+Also, if user chooses to allow certain service globally, in our example Google
+Analytics, the questions could use previously set defaults.
+
+This would not remove the nag from the first visit on a site, but would allow
+browsers to store the decisions, and only ask once ever unless site changes
+it's policy. On the other hand, as question would be asked, user would control
+if their previously chosen preferences should be communicated to the site. It
+would also be possible to notice if site tries to ask preferences for "too
+many" different services, which could be related to a fingerpriting
+attempt.
