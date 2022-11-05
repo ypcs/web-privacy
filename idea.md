@@ -12,6 +12,14 @@ sitemap: true
 published: true
 ---
 
+TL;DR;
+
+ - pros: ask only once per server, sync between user devices, default deny to
+   all tracking
+ - cons: still ask, or we lose privacy due to fingerprinting of the policy
+   preferences
+
+
 Note: Following is work-in-progress, and just quickly drafted from my mind
 related to discussion at <https://mastodontti.fi/@vrntnn/109290555339487403>.
 
